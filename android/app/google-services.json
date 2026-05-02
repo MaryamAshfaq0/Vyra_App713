@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "848993569072",
+    "project_id": "vyraapp-713",
+    "storage_bucket": "vyraapp-713.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848993569072:android:da57cee453b10a028de0f5",
+        "android_client_info": {
+          "package_name": "com.example.vyra_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuKFNRnN-FcHxCB1MnYh1Q1XcOtWi5hls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848993569072:android:4c9d91ac8733d5508de0f5",
+        "android_client_info": {
+          "package_name": "com.omega.vyraapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuKFNRnN-FcHxCB1MnYh1Q1XcOtWi5hls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
