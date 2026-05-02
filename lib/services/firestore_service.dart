@@ -6,15 +6,17 @@ class FirestoreService {
     'vibes',
   );
 
+  //ADD VIBE
   Future<void> addVibe(Vibe vibe) async {
     await vibes.add(vibe.toMap());
   }
 
+  //REAL-TIME STREAM
   Stream<List<Vibe>> getVibes() {
     return vibes.orderBy('time', descending: true).snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Vibe.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      return snapshot.docs.map((doc) {
+        return Vibe.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
     });
   }
 }

@@ -56,35 +56,37 @@ class FeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Vyra 💜")),
+      appBar: AppBar(title: const Text("Vyra 💜"), centerTitle: true),
 
-      // FIREBASE REAL-TIME FEED
       body: StreamBuilder<List<Vibe>>(
         stream: FirestoreService().getVibes(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          // 🔄 Loading state
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final vibes = snapshot.data!;
+          // Error state
+          if (snapshot.hasError) {
+            return const Center(child: Text("Something went wrong ❌"));
+          }
 
+          final vibes = snapshot.data ?? [];
+
+          // Empty state
           if (vibes.isEmpty) {
             return const Center(child: Text("No vibes yet 😔"));
           }
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: ListView.builder(
-              itemCount: vibes.length,
-              itemBuilder: (context, index) {
-                final vibe = vibes[index];
+          // REAL FEED
+          return ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: vibes.length,
+            itemBuilder: (context, index) {
+              final vibe = vibes[index];
 
-                return VibeCard(
-                  name: vibe.userEmail, // user
-                  vibe: vibe.text,
-                );
-              },
-            ),
+              return VibeCard(name: vibe.userEmail, vibe: vibe.text);
+            },
           );
         },
       ),
