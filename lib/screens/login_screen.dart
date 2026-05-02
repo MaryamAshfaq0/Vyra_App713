@@ -15,6 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final AuthService auth = AuthService();
 
+  // 🔐 LOGIN FUNCTION
   void login() async {
     final email = emailController.text.trim();
     final password = passController.text.trim();
@@ -32,15 +33,18 @@ class _LoginScreenState extends State<LoginScreen> {
     final user = await auth.login(email, password);
 
     if (user != null) {
+      showMessage("Login Successful 🎉");
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } else {
-      showMessage("Login failed");
+      showMessage("Login Failed ❌");
     }
   }
 
+  // 🔐 SIGNUP FUNCTION
   void signup() async {
     final email = emailController.text.trim();
     final password = passController.text.trim();
@@ -58,12 +62,18 @@ class _LoginScreenState extends State<LoginScreen> {
     final user = await auth.signUp(email, password);
 
     if (user != null) {
-      showMessage("Account created! Now login");
+      showMessage("Signup Successful 🎉");
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
     } else {
-      showMessage("Signup failed");
+      showMessage("Signup Failed ❌ (email may already exist)");
     }
   }
 
+  // 📢 SNACKBAR FUNCTION
   void showMessage(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }

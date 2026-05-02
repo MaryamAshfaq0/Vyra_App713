@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'post_vibe_screen.dart';
 import 'profile_screen.dart';
+import '../services/firestore_service.dart';
+import '../models/vibe.dart';
 import '../widgets/vibe_card.dart';
-import 'package:provider/provider.dart';
-import '../providers/vibe_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => PostVibeScreen()),
+            MaterialPageRoute(builder: (_) => const PostVibeScreen()),
           );
         },
       ),
@@ -58,20 +58,31 @@ class FeedScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Vyra 💜")),
 
-      body: Consumer<VibeProvider>(
-        builder: (context, vibeProvider, child) {
-          if (vibeProvider.vibes.isEmpty) {
+      // FIREBASE REAL-TIME FEED
+      body: StreamBuilder<List<Vibe>>(
+        stream: FirestoreService().getVibes(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final vibes = snapshot.data!;
+
+          if (vibes.isEmpty) {
             return const Center(child: Text("No vibes yet 😔"));
           }
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: ListView.builder(
-              itemCount: vibeProvider.vibes.length,
+              itemCount: vibes.length,
               itemBuilder: (context, index) {
-                final vibe = vibeProvider.vibes[index];
+                final vibe = vibes[index];
 
-                return VibeCard(name: "You", vibe: vibe.text);
+                return VibeCard(
+                  name: vibe.userEmail, // user
+                  vibe: vibe.text,
+                );
               },
             ),
           );

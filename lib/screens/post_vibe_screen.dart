@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/vibe_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/vibe.dart';
+import '../services/firestore_service.dart';
 
 class PostVibeScreen extends StatefulWidget {
   const PostVibeScreen({super.key});
@@ -11,6 +12,45 @@ class PostVibeScreen extends StatefulWidget {
 
 class _PostVibeScreenState extends State<PostVibeScreen> {
   final TextEditingController controller = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> postVibe() async {
+    final text = controller.text.trim();
+
+    if (text.isEmpty) return;
+
+    setState(() => isLoading = true);
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    try {
+      final vibe = Vibe(
+        text: text,
+        userEmail: user?.email ?? "unknown",
+        time: DateTime.now(),
+      );
+
+      await FirestoreService().addVibe(vibe);
+
+      controller.clear();
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Vibe posted 💜")));
+
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Error posting vibe ❌")));
+      }
+    }
+
+    setState(() => isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +61,7 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // ✨ Premium Input Box
+            // ✨ Input Box
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -36,6 +76,7 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
               ),
               child: TextField(
                 controller: controller,
+                maxLines: 3,
                 decoration: const InputDecoration(
                   hintText: "How are you feeling today?",
                   border: InputBorder.none,
@@ -45,32 +86,21 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
 
             const SizedBox(height: 20),
 
-            // 🔥 Gradient Button
-            Container(
+            // 🔥 Button
+            SizedBox(
               width: double.infinity,
               height: 55,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFB388FF), Color(0xFF7C4DFF)],
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
               child: ElevatedButton(
+                onPressed: isLoading ? null : postVibe,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
+                  backgroundColor: const Color(0xFF7C4DFF),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
-                onPressed: () {
-                  if (controller.text.isNotEmpty) {
-                    Provider.of<VibeProvider>(
-                      context,
-                      listen: false,
-                    ).addVibe(controller.text);
-
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text("Post Vibe", style: TextStyle(fontSize: 16)),
+                child: isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text("Post Vibe", style: TextStyle(fontSize: 16)),
               ),
             ),
           ],

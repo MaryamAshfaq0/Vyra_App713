@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/vibe_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final vibeProvider = Provider.of<VibeProvider>(context);
-
     return Scaffold(
       appBar: AppBar(title: const Text("Profile")),
 
@@ -16,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ✨ Gradient Avatar
+            //  Avatar
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
@@ -41,10 +37,7 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            Text(
-              "🔥 ${vibeProvider.streak} day streak",
-              style: const TextStyle(fontSize: 16),
-            ),
+            const Text("🔥 Streak coming soon", style: TextStyle(fontSize: 16)),
           ],
         ),
       ),
