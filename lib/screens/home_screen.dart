@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'post_vibe_screen.dart';
 import 'profile_screen.dart';
@@ -33,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF050505),
       body: _screens[_currentIndex],
-
       floatingActionButton: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -59,7 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-
       bottomNavigationBar: Container(
         margin: const EdgeInsets.all(14),
         decoration: BoxDecoration(
@@ -118,7 +117,6 @@ class FeedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF050505),
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -156,7 +154,6 @@ class FeedScreen extends StatelessWidget {
           ),
         ],
       ),
-
       body: Stack(
         children: [
           Positioned(
@@ -176,7 +173,6 @@ class FeedScreen extends StatelessWidget {
               ),
             ),
           ),
-
           Positioned(
             bottom: -140,
             right: -100,
@@ -191,12 +187,10 @@ class FeedScreen extends StatelessWidget {
               ),
             ),
           ),
-
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 90, sigmaY: 90),
             child: Container(color: Colors.transparent),
           ),
-
           StreamBuilder<List<Vibe>>(
             stream: FirestoreService().getVibes(),
             builder: (context, snapshot) {
@@ -273,7 +267,8 @@ class _DarkVibeCardState extends State<DarkVibeCard> {
   Future<void> _toggleLike() async {
     final service = FirestoreService();
 
-    const currentUserEmail = "currentUserEmail"; // replace with FirebaseAuth
+    final currentUserEmail =
+        FirebaseAuth.instance.currentUser?.email ?? "Unknown User";
 
     setState(() {
       isLiked = !isLiked;
@@ -285,14 +280,35 @@ class _DarkVibeCardState extends State<DarkVibeCard> {
       }
     });
 
-    if (isLiked) {
-      await service.likeVibe(
-        widget.vibe.id,
-        currentUserEmail,
-        widget.vibe.userEmail,
+    try {
+      if (isLiked) {
+        await service.likeVibe(
+          widget.vibe.id,
+          currentUserEmail,
+          widget.vibe.userEmail,
+        );
+      } else {
+        await service.unlikeVibe(
+          widget.vibe.id,
+          currentUserEmail,
+        );
+      }
+    } catch (e) {
+      setState(() {
+        if (isLiked) {
+          likes--;
+        } else {
+          likes++;
+        }
+
+        isLiked = !isLiked;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Something went wrong ❌"),
+        ),
       );
-    } else {
-      await service.unlikeVibe(widget.vibe.id, currentUserEmail);
     }
   }
 
@@ -332,9 +348,7 @@ class _DarkVibeCardState extends State<DarkVibeCard> {
                   const Icon(Icons.more_horiz, color: Colors.white54),
                 ],
               ),
-
               const SizedBox(height: 18),
-
               Text(
                 widget.vibe.text,
                 style: const TextStyle(
@@ -343,9 +357,7 @@ class _DarkVibeCardState extends State<DarkVibeCard> {
                   height: 1.5,
                 ),
               ),
-
               const SizedBox(height: 20),
-
               Row(
                 children: [
                   GestureDetector(
