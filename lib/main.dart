@@ -21,13 +21,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // 🔥 Firebase background notifications
+  // Firebase background notifications
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // 🔥 Firebase local/foreground notifications (your service)
+  //Firebase local/foreground notifications (your service)
   await PushNotificationService.init();
 
-  // 🔥 OneSignal setup
+  //OneSignal setup
   OneSignal.initialize("76a0cdd3-2e34-411d-b4a9-05f8d06bf8af");
   OneSignal.Notifications.requestPermission(true);
 

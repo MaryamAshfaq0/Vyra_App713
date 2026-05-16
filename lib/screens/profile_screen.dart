@@ -128,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 const SizedBox(height: 10),
 
-                // 🔥 STREAK CARD
+                // STREAK CARD
                 Container(
                   margin: const EdgeInsets.only(top: 10),
                   padding: const EdgeInsets.symmetric(

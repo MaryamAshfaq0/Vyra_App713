@@ -24,7 +24,7 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     try {
-      // ✅ FIXED FOR NEW MODEL (id + likes added)
+      // Create vibe objectand save to Firestore
       final vibe = Vibe(
         id: '', // Firestore will generate automatically
         text: text,
@@ -48,7 +48,7 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text("Error posting vibe ❌")));
+        ).showSnackBar(const SnackBar(content: Text("Error posting vibe")));
       }
     }
 
@@ -59,19 +59,17 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF050505),
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text("Share Your Vibe"),
         centerTitle: true,
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // ✨ INPUT BOX (DARK GLASS STYLE)
+            // INPUT BOX
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -93,20 +91,21 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
 
             const SizedBox(height: 25),
 
-            // 🔥 BUTTON
+            // BUTTON
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
                 onPressed: isLoading ? null : postVibe,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurpleAccent,
+                  backgroundColor: const Color.fromARGB(255, 178, 168, 205),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
                 child: isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const CircularProgressIndicator(
+                        color: Color.fromARGB(255, 62, 4, 84))
                     : const Text("Post Vibe", style: TextStyle(fontSize: 16)),
               ),
             ),

@@ -1,17 +1,16 @@
 class NotificationModel {
   final String title;
-  final DateTime time;
+  final String type;
 
-  NotificationModel({required this.title, required this.time});
+  NotificationModel({
+    required this.title,
+    required this.type,
+  });
 
   factory NotificationModel.fromMap(Map<String, dynamic> map) {
     return NotificationModel(
       title: map['title'] ?? '',
-      time: DateTime.parse(map['time']),
+      type: map['type'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {'title': title, 'time': time.toIso8601String()};
   }
 }

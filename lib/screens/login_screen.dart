@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final user = await auth.login(email, password);
 
     if (user != null) {
-      // 🔥 ONE SIGNAL ADD
+      //ONE SIGNAL ADD
       OneSignalService.setUser(user.uid);
 
       Navigator.pushReplacement(
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final user = await auth.signUp(email, password);
 
     if (user != null) {
-      // 🔥 ONE SIGNAL ADD
+      // ONE SIGNAL ADD
       OneSignalService.setUser(user.uid);
 
       Navigator.pushReplacement(

@@ -22,15 +22,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    FeedScreen(),
-    ExploreScreen(),
-    NotificationsScreen(),
-    ProfileScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    final List<Widget> _screens = [
+      const FeedScreen(),
+      const ExploreScreen(),
+      NotificationsScreen(
+        currentUserId: user?.uid ?? "",
+      ),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
       backgroundColor: const Color(0xFF050505),
       body: _screens[_currentIndex],
@@ -300,7 +304,6 @@ class _DarkVibeCardState extends State<DarkVibeCard> {
         } else {
           likes++;
         }
-
         isLiked = !isLiked;
       });
 
