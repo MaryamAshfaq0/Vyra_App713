@@ -24,10 +24,13 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     try {
+      // ✅ FIXED FOR NEW MODEL (id + likes added)
       final vibe = Vibe(
+        id: '', // Firestore will generate automatically
         text: text,
         userEmail: user?.email ?? "unknown",
         time: DateTime.now(),
+        likes: 0,
       );
 
       await FirestoreService().addVibe(vibe);
@@ -55,45 +58,49 @@ class _PostVibeScreenState extends State<PostVibeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Share Your Vibe")),
+      backgroundColor: const Color(0xFF050505),
+
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text("Share Your Vibe"),
+        centerTitle: true,
+      ),
 
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // ✨ Input Box
+            // ✨ INPUT BOX (DARK GLASS STYLE)
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.white.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                  ),
-                ],
+                border: Border.all(color: Colors.white10),
               ),
               child: TextField(
                 controller: controller,
-                maxLines: 3,
+                maxLines: 4,
+                style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   hintText: "How are you feeling today?",
+                  hintStyle: TextStyle(color: Colors.white38),
                   border: InputBorder.none,
                 ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
-            // 🔥 Button
+            // 🔥 BUTTON
             SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton(
                 onPressed: isLoading ? null : postVibe,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF7C4DFF),
+                  backgroundColor: Colors.deepPurpleAccent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
